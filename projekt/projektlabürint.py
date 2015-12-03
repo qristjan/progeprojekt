@@ -245,5 +245,6 @@ def ajatabel():
             if event.type is KEYDOWN and event.key is K_SPACE:
                 startup()
 
+
 startup()
 pygame.quit()
