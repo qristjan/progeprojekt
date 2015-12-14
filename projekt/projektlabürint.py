@@ -1,6 +1,7 @@
 import pygame
-from projekt.levels import *  #Kui tekib probleem "unresolved reference või "no module named projekt", siis...
-                      #...tuleb see ümber vahetada "from levels import *".
+from projekt.levels import *
+#Kui tekib probleem "unresolved reference või "no module named projekt", siis...
+#...tuleb see ümber vahetada "from levels import *".
 from pygame.locals import *
 from time import *
 
@@ -10,12 +11,17 @@ TODO: Levelid lõpuni teha, teleport_rectid lõpetada
 TODO: Mängu alguse ja lõpu pildid ära vahetada/paigutada
 """
 
+pygame.mixer.init(frequency=22050, size=-16, channels=2, buffer=4096)
+pygame.mixer.music.load("GoTtheme.mp3")
+pygame.mixer.music.play(loops = 100)
+pygame.mixer.music.set_volume(1.0)
+
 def mäng(kiirus, tase):
 
     class Player(object):
 
         def __init__(self):
-            self.rect = pygame.Rect(20, 20, 10, 10)  #Mängija asukoht ja suurus
+            self.rect = pygame.Rect(20, 20, 5, 5)  #Mängija asukoht ja suurus
 
         def mängija_liikumine(self, x, y):
             self.rect.x += x
@@ -163,11 +169,6 @@ def ekraan(a, b, tekst, d, tekst2, e):
 def startup():
     ekraan("The Maze-Game", "jigsaw.jpg", "Alustamiseks vali sobiv kiirus: 1, 2, 3", 100, "Vajuta SPACE skooride jaoks", 130)
 
-    pygame.mixer.init(frequency=22050, size=-16, channels=2, buffer=4096)
-    pygame.mixer.music.load("GoTtheme.mp3")
-    pygame.mixer.music.play(loops = 100)
-    pygame.mixer.music.set_volume(1.0)
-
     while True:
         for event in pygame.event.get():
             if event.type is QUIT:
@@ -192,7 +193,6 @@ def lõpp():
             if event.type is KEYDOWN and event.key is K_ESCAPE:
                 quit()
             if event.type is KEYDOWN and event.key is K_s:
-                pygame.quit()  #Lisasin "pygame.quit()", kuna see peaks vältima rekursiooni
                 startup()
 
 def arvuta(sõnena):
@@ -243,8 +243,7 @@ def ajatabel():
             if event.type is KEYDOWN and event.key is K_ESCAPE:
                 quit()
             if event.type is KEYDOWN and event.key is K_SPACE:
-                startup()#komm
-
+                startup()
 
 startup()
 pygame.quit()
