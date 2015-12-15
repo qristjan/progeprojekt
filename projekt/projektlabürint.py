@@ -8,43 +8,29 @@ from time import *
 """
 Veel on tegemist pooliku versiooniga.
 TODO: Levelid lõpuni teha, teleport_rectid lõpetada
-TODO: Mängu alguse ja lõpu pildid ära vahetada/paigutada
+Thonnyga kasutamisel tekivad mingisugused probleemid, Pycharmiga neid ei ole
 """
 
 pygame.mixer.init(frequency=22050, size=-16, channels=2, buffer=4096)
-pygame.mixer.music.load("GoTtheme.mp3")
-pygame.mixer.music.play(loops = 100)
-pygame.mixer.music.set_volume(1.0)
+pygame.mixer.music.load("Skyrimtheme.mp3")
+pygame.mixer.music.play(loops=100)
+pygame.mixer.music.set_volume(0.1)
 
 def mäng(kiirus, tase):
 
     class Player(object):
 
         def __init__(self):
-            self.rect = pygame.Rect(20, 20, 5, 5)  #Mängija asukoht ja suurus
+            self.rect = pygame.Rect(20, 20, 10, 10)  #Mängija asukoht ja suurus
 
         def mängija_liikumine(self, x, y):
             self.rect.x += x
             self.rect.y += y
 
-            if tase == level1:
-                if self.rect.x in range(80, 96) and self.rect.y in range(170, 192):
-                    self.rect.x = 550
-                    self.rect.y = 48
-            if tase == level2:
-                if self.rect.x in range(112, 136) and self.rect.y in range(448, 464):
-                    self.rect.x = 384
-                    self.rect.y = 512
-
-            if tase == level4:
-                if self.rect.x in range(328, 352) and self.rect.y in range(368, 384):
-                    self.rect.x = 350
-                    self.rect.y = 470
-
             for wall in seinad:
                 if self.rect.colliderect(wall.rect):
                     if x > 0 or x < 0 or y > 0 or y < 0:  #Kui mängija läheb vastu seina, siis läheb ta tagasi algpositsioonile
-                        self.rect.x = self.rect.y = 24    #Tegelikult minnakse algpositisoonile, kui minna "seina sisse"
+                        self.rect.x = self.rect.y = 24
 
         def liikumine(self, x, y):
             if x != 0:
@@ -71,8 +57,10 @@ def mäng(kiirus, tase):
             if sein  == "W":
                 Wall((x, y))
             if sein == "E":
+                global end_rect
                 end_rect = pygame.Rect(x, y, 16, 16)
             if sein == "A":
+                global teleport_rect
                 teleport_rect = pygame.Rect(x, y, 16, 16)
             x += 16
         y += 16
@@ -108,9 +96,12 @@ def mäng(kiirus, tase):
             player.liikumine(0, speed)
 
         if tase == level1:
+            if player.rect.colliderect(teleport_rect):
+                player.rect.x = 550
+                player.rect.y = 48
             if player.rect.colliderect(end_rect):
-                aeg_k1 = time()
-                m = round((aeg_k1 - aeg_k_algus),3)
+                aeg_k = time()
+                m = round((aeg_k - aeg_k_algus),3)
                 print("Tase kestis", m, "sekundit")
                 with open("ajad.txt", 'a') as out:
                     out.write("\n")
@@ -119,9 +110,12 @@ def mäng(kiirus, tase):
             kaart()
 
         elif tase == level2:
+            if player.rect.colliderect(teleport_rect):
+                player.rect.x = 384
+                player.rect.y = 512
             if player.rect.colliderect(end_rect):
-                aeg_k2 = time()
-                m = round((aeg_k2 - aeg_k_algus),3)
+                aeg_k = time()
+                m = round((aeg_k - aeg_k_algus),3)
                 print("Tase kestis", m, "sekundit")
                 with open("ajad.txt", 'a') as out:
                     out.write(str(m)+";")
@@ -129,9 +123,12 @@ def mäng(kiirus, tase):
             kaart()
 
         elif tase == level3:
+            if player.rect.colliderect(teleport_rect):
+                player.rect.x = 400
+                player.rect.y = 550
             if player.rect.colliderect(end_rect):
-                aeg_k3 = time()
-                m = round((aeg_k3 - aeg_k_algus),3)
+                aeg_k = time()
+                m = round((aeg_k - aeg_k_algus),3)
                 print("Tase kestis", m, "sekundit")
                 with open("ajad.txt", 'a') as out:
                     out.write(str(m)+";")
@@ -139,15 +136,29 @@ def mäng(kiirus, tase):
             kaart()
 
         elif tase == level4:
+            if player.rect.colliderect(teleport_rect):
+                player.rect.x = 350
+                player.rect.y = 470
             if player.rect.colliderect(end_rect):
-                aeg_k3 = time()
-                m = round((aeg_k3 - aeg_k_algus),3)
+                aeg_k = time()
+                m = round((aeg_k - aeg_k_algus),3)
+                print("Tase kestis", m, "sekundit")
+                with open("ajad.txt", 'a') as out:
+                    out.write(str(m) +";")
+                mäng(speed, level5)
+            kaart()
+
+        elif tase == level5:
+            if player.rect.colliderect(end_rect):
+                aeg_k = time()
+                m = round((aeg_k - aeg_k_algus),3)
                 print("Tase kestis", m, "sekundit")
                 print("-----LÕPP-----")
                 with open("ajad.txt", 'a') as out:
                     out.write(str(m) + '\n')
                 lõpp()
             kaart()
+
         else:
             raise SystemExit
 
@@ -206,6 +217,7 @@ def arvuta(sõnena):
 def ajatabel():
     fail = open("ajad.txt")
     x = fail.readlines()
+    fail.close()
 
     tabel = []
     for i in x:
@@ -244,6 +256,4 @@ def ajatabel():
                 quit()
             if event.type is KEYDOWN and event.key is K_SPACE:
                 startup()
-
 startup()
-pygame.quit()
