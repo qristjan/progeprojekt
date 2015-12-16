@@ -8,7 +8,7 @@ from time import *
 #Thonnyga kasutamisel tekivad mingisugused probleemid, Pycharmiga neid ei ole
 
 pygame.mixer.init(frequency=22050, size=-16, channels=2, buffer=4096)
-pygame.mixer.music.load("Skyrimtheme.mp3")
+pygame.mixer.music.load("GoTtheme.mp3")
 pygame.mixer.music.play(loops=100)
 pygame.mixer.music.set_volume(0.1)
 
