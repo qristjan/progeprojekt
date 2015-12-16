@@ -5,11 +5,7 @@ from projekt.levels import *
 from pygame.locals import *
 from time import *
 
-"""
-Veel on tegemist pooliku versiooniga.
-TODO: Levelid lõpuni teha, teleport_rectid lõpetada
-Thonnyga kasutamisel tekivad mingisugused probleemid, Pycharmiga neid ei ole
-"""
+#Thonnyga kasutamisel tekivad mingisugused probleemid, Pycharmiga neid ei ole
 
 pygame.mixer.init(frequency=22050, size=-16, channels=2, buffer=4096)
 pygame.mixer.music.load("Skyrimtheme.mp3")
@@ -21,7 +17,7 @@ def mäng(kiirus, tase):
     class Player(object):
 
         def __init__(self):
-            self.rect = pygame.Rect(20, 20, 10, 10)  #Mängija asukoht ja suurus
+            self.rect = pygame.Rect(20, 20, 8, 8)  #Mängija asukoht ja suurus
 
         def mängija_liikumine(self, x, y):
             self.rect.x += x
@@ -30,7 +26,7 @@ def mäng(kiirus, tase):
             for wall in seinad:
                 if self.rect.colliderect(wall.rect):
                     if x > 0 or x < 0 or y > 0 or y < 0:  #Kui mängija läheb vastu seina, siis läheb ta tagasi algpositsioonile
-                        self.rect.x = self.rect.y = 24
+                        self.rect.x = self.rect.y = 20
 
         def liikumine(self, x, y):
             if x != 0:
@@ -83,6 +79,7 @@ def mäng(kiirus, tase):
         for e in pygame.event.get():
             if e.type is pygame.QUIT:
                 quit()
+
         key = pygame.key.get_pressed()
         if key[pygame.K_ESCAPE]:
             quit()
@@ -125,7 +122,7 @@ def mäng(kiirus, tase):
         elif tase == level3:
             if player.rect.colliderect(teleport_rect):
                 player.rect.x = 400
-                player.rect.y = 550
+                player.rect.y = 100
             if player.rect.colliderect(end_rect):
                 aeg_k = time()
                 m = round((aeg_k - aeg_k_algus),3)
@@ -149,6 +146,9 @@ def mäng(kiirus, tase):
             kaart()
 
         elif tase == level5:
+            if player.rect.colliderect(teleport_rect):
+                player.rect.x = 695
+                player.rect.y = 300
             if player.rect.colliderect(end_rect):
                 aeg_k = time()
                 m = round((aeg_k - aeg_k_algus),3)
@@ -168,12 +168,12 @@ def ekraan(a, b, tekst, d, tekst2, e):
     ekraani_pind = pygame.display.set_mode((500, 320))
     pygame.display.set_caption(a)
     pilt = pygame.image.load(b)
-    ekraani_pind.blit(pilt, (0,0))
+    ekraani_pind.blit(pilt, (0, 0))
 
     meie_font = pygame.font.SysFont("Arial", 24)
-    teksti_pilt = meie_font.render(tekst, False, (255,255,255))
+    teksti_pilt = meie_font.render(tekst, False, (255, 255, 255))
     ekraani_pind.blit(teksti_pilt, (d, 20))
-    teksti_pilt2 = meie_font.render(tekst2, False, (255,255,255))
+    teksti_pilt2 = meie_font.render(tekst2, False, (255, 255, 255))
     ekraani_pind.blit(teksti_pilt2, (e, 50))
     pygame.display.flip()
 
@@ -186,14 +186,16 @@ def startup():
                 quit()
             if event.type is KEYDOWN and event.key is K_ESCAPE:
                 quit()
-            if event.type is KEYDOWN and event.key is K_1:
+            if event.type is KEYDOWN and (event.key is K_1 or event.key == 0x101):
                 mäng(1, level1)
-            if event.type is KEYDOWN and event.key is K_2:
+            if event.type is KEYDOWN and (event.key is K_2 or event.key == 0x102):
                 mäng(2, level1)
-            if event.type is KEYDOWN and event.key is K_3:
+            if event.type is KEYDOWN and (event.key is K_3 or event.key == 0x103):
                 mäng(3, level1)
             if event.type is KEYDOWN and event.key is K_SPACE:
                 ajatabel()
+            else:
+                pass
 
 def lõpp():
     ekraan("Victory!","victory.jpg","Jõudsid lõppu", 130, "Vajuta S restarti jaoks", 130)
@@ -212,7 +214,7 @@ def arvuta(sõnena):
     tulemus = 0
     for i in num:
         tulemus += i
-    return round(tulemus,3)
+    return round(tulemus, 3)
 
 def ajatabel():
     fail = open("ajad.txt")
