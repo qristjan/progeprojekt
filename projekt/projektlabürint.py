@@ -1,3 +1,6 @@
+#  https://github.com/qristjan/progeprojekt/tree/master/projekt
+#  Kristjan Puusepp
+
 import pygame
 from projekt.levels import *
 #Kui tekib probleem "unresolved reference või "no module named projekt", siis...
