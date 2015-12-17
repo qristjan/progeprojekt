@@ -8,9 +8,9 @@ from time import *
 #Thonnyga kasutamisel tekivad mingisugused probleemid, Pycharmiga neid ei ole
 
 pygame.mixer.init(frequency=22050, size=-16, channels=2, buffer=4096)
-pygame.mixer.music.load("GoTtheme.mp3")
-pygame.mixer.music.play(loops=100)
-pygame.mixer.music.set_volume(0.1)
+pygame.mixer.music.load("Tetris.mp3")
+pygame.mixer.music.play(loops=1000)
+pygame.mixer.music.set_volume(0.5)
 
 def mäng(kiirus, tase):
 
@@ -79,6 +79,11 @@ def mäng(kiirus, tase):
         for e in pygame.event.get():
             if e.type is pygame.QUIT:
                 quit()
+            """
+            if e.type is KEYDOWN and e.key is K_h:
+                pygame.quit()
+                startup()
+            """
 
         key = pygame.key.get_pressed()
         if key[pygame.K_ESCAPE]:
@@ -230,7 +235,7 @@ def ajatabel():
     skoorid = sorted(tabel)
 
     pygame.init()
-    ekraani_pind = pygame.display.set_mode( (500, 320) )
+    ekraani_pind = pygame.display.set_mode((500, 320))
     pygame.display.set_caption("SKOORID")
 
     ekraani_pind.fill((0, 0, 0))
@@ -258,4 +263,5 @@ def ajatabel():
                 quit()
             if event.type is KEYDOWN and event.key is K_SPACE:
                 startup()
+
 startup()
